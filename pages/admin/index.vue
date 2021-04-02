@@ -1,14 +1,12 @@
 <template>
-  <div>
-    Admin or something
-    {{ $auth.user.email }}
-  </div>
+  <div />
 </template>
 
 <script>
 import Vue from 'vue'
 
 export default Vue.extend({
+  layout: 'admin',
   middleware: 'auth'
 })
 </script>
