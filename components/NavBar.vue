@@ -5,12 +5,23 @@
         <Logo />
       </NuxtLink>
       <nav>
-        <div class="links">
+        <div v-if="!isAuthenticated" class="links">
           <NuxtLink v-for="(link, index) in links" :key="index" :to="link.to" class="bold">
             {{ link.name }}
           </NuxtLink>
         </div>
+        <div v-else class="links">
+          <NuxtLink v-for="(link, index) in linksAdmin" :key="index" :to="link.to" class="bold">
+            {{ link.name }}
+          </NuxtLink>
+        </div>
         <div class="actions">
+          <div v-if="isAuthenticated" class="user">
+            <NuxtLink to="/admin/profile" class="bold">
+              {{ loggedInUser.name }}
+            </NuxtLink>
+            <LogOutIcon @click="logout()" />
+          </div>
           <div class="menu-toggle" @click="openMobileMenu">
             <MenuIcon />
           </div>
@@ -39,12 +50,14 @@
 
 <script lang="js">
 import Vue from 'vue'
-import { XIcon, MenuIcon } from 'vue-feather-icons'
+import { XIcon, MenuIcon, LogOutIcon } from 'vue-feather-icons'
+import { mapGetters } from 'vuex'
 
 export default Vue.extend({
   components: {
     XIcon,
-    MenuIcon
+    MenuIcon,
+    LogOutIcon
   },
   data () {
     return {
@@ -54,10 +67,20 @@ export default Vue.extend({
         { name: 'Školy', to: '/schools' },
         { name: 'Články', to: '/articles' }
       ],
+      linksAdmin: [
+        { name: 'Domov', to: '/admin' },
+        { name: 'Školy', to: '/admin/schools' },
+        { name: 'Články', to: '/admin/articles' },
+        { name: 'Používatelia', to: '/admin/users' }
+      ],
       wScroll: 0,
       sticky: false,
-      mobileMenuOpen: false
+      mobileMenuOpen: false,
+      loggedIn: this.$auth.loggedIn
     }
+  },
+  computed: {
+    ...mapGetters(['isAuthenticated', 'loggedInUser'])
   },
   beforeMount () {
     window.addEventListener('scroll', this.handleScroll)
@@ -87,6 +110,9 @@ export default Vue.extend({
       } else {
         this.sticky = false
       }
+    },
+    async logout () {
+      await this.$auth.logout()
     }
   }
 })
@@ -167,6 +193,20 @@ header
       a
         display: block
         padding: $l
+
+  .user
+    display: flex
+    align-items: center
+    margin-left: $xl
+
+    svg
+      cursor: pointer
+      color: $ui3
+      transition: .2s ease-in-out
+      margin-left: $m
+
+      &:hover
+        color: $ui1
 
 @media screen and (max-width: 700px)
   header

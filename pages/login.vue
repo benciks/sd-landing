@@ -2,8 +2,8 @@
   <div class="container">
     <div class="form">
       <Logo class="logo" />
-      <SInput v-model="user.email" type="email" placeholder="Email" />
-      <SInput v-model="user.password" type="password" placeholder="Heslo" />
+      <SInput v-model="email" type="email" placeholder="Email" />
+      <SInput v-model="password" type="password" placeholder="Heslo" />
       <SButton value="Prihlásiť" @click.native="onSubmit" />
     </div>
   </div>
@@ -14,17 +14,27 @@ import Vue from 'vue'
 
 export default Vue.extend({
   layout: 'auth',
+  middleware: 'guest',
   data () {
     return {
-      user: {
-        email: '',
-        password: ''
-      }
+      email: '',
+      password: ''
     }
   },
   methods: {
-    onSubmit () {
-      alert('hello')
+    async onSubmit () {
+      try {
+        await this.$auth.loginWith('local', {
+          data: {
+            email: this.email,
+            password: this.password
+          }
+        })
+
+        this.$router.push('/admin')
+      } catch (e) {
+        this.error = e.error.data.message
+      }
     }
   }
 })

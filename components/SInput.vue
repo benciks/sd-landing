@@ -1,5 +1,5 @@
 <template>
-  <input :type="type" :placeholder="placeholder" class="copy-m">
+  <input :type="type" :placeholder="placeholder" :value="modelValue" class="copy-m" @input="updateValue($event.target.value)">
 </template>
 
 <script>
@@ -14,6 +14,15 @@ export default Vue.extend({
     placeholder: {
       type: String,
       default: 'value'
+    },
+    modelValue: {
+      type: String,
+      default: ''
+    }
+  },
+  methods: {
+    updateValue (value) {
+      this.$emit('input', value)
     }
   }
 })

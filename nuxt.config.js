@@ -56,9 +56,33 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: 'http://localhost:3000',
+    headers: {
+      common: {
+        Accept: 'application/json'
+      }
+    }
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+
+  server: {
+    port: 8080
+  },
+
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/login', method: 'post', propertyName: 'jwt' },
+          user: { url: '/users/me', method: 'get', propertyName: false },
+          logout: false
+        },
+        tokenType: ''
+      }
+    }
   }
 }

@@ -2,11 +2,11 @@
   <div class="container">
     <div class="form">
       <Logo class="logo" />
-      <SInput type="email" placeholder="Email" />
-      <SInput type="text" placeholder="Celé meno" />
-      <SInput type="password" placeholder="Heslo" />
-      <SInput type="password" placeholder="Zopakujte heslo" />
-      <SButton value="Log in" />
+      <SInput v-model="email" type="email" placeholder="Email" />
+      <SInput v-model="name" type="text" placeholder="Celé meno" />
+      <SInput v-model="password" type="password" placeholder="Heslo" />
+      <SInput v-model="repeatPassword" type="password" placeholder="Heslo" />
+      <SButton value="Registrovať" @click.native="onSubmit" />
     </div>
   </div>
 </template>
@@ -15,7 +15,36 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  layout: 'auth'
+  layout: 'auth',
+  data () {
+    return {
+      name: '',
+      email: '',
+      password: '',
+      repeatPassword: ''
+    }
+  },
+  methods: {
+    async onSubmit () {
+      try {
+        await this.$axios.post('/register', {
+          name: this.name,
+          email: this.email,
+          password: this.password
+        })
+        await this.$auth.loginWith('local', {
+          data: {
+            email: this.email,
+            password: this.password
+          }
+        })
+
+        this.$router.push('/admin')
+      } catch (e) {
+        this.error = e.error.data.message
+      }
+    }
+  }
 })
 </script>
 
