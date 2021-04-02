@@ -1,5 +1,11 @@
 <template>
-  <div />
+  <div>
+    <LandingSectionHero />
+    <LandingSectionPost />
+    <LandingSectionTrain />
+    <LandingSectionShip />
+    <LandingSectionEvents />
+  </div>
 </template>
 
 <script>

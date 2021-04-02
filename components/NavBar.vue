@@ -131,7 +131,7 @@ header
     box-shadow: $small-shadow
   .header-container
     width: 100%
-    padding: $xxl 0
+    padding: $l 0
     display: flex
     align-items: center
     justify-content: space-between
@@ -211,7 +211,7 @@ header
 @media screen and (max-width: 700px)
   header
     .header-container
-      padding: $xxl $xl
+      padding: $l $xl
       nav
         .links, .actions .login
           display: none
@@ -228,13 +228,13 @@ header
 @media screen and (max-width: 1030px)
   header
     .header-container
-      padding: $xxl $xl
+      padding: $l $xl
 
 @media screen and (min-width: 700px)
   header
     display: flex
     justify-content: center
-    padding-top: 16px
+    padding-top: 56px
     .menu-toggle
       display: none
     .header-container

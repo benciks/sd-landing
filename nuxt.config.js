@@ -4,7 +4,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'sd-landing',
+    title: 'Študuj Dopravu',
     htmlAttrs: {
       lang: 'en'
     },
@@ -39,7 +39,10 @@ export default {
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
+  components: [
+    '~/components',
+    { path: '~/components/landing', prefix: 'landing' }
+  ],
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -70,6 +73,7 @@ export default {
   },
 
   server: {
+    host: '0.0.0.0',
     port: 8080
   },
 

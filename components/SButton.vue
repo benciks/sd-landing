@@ -1,15 +1,20 @@
 <template>
-  <button>
+  <button :class="type">
     <span class="value copy-m bold">
       {{ value }}
     </span>
+    <ArrowRightIcon v-if="type === 'textMore'" />
   </button>
 </template>
 
 <script>
 import Vue from 'vue'
+import { ArrowRightIcon } from 'vue-feather-icons'
 
 export default Vue.extend({
+  components: {
+    ArrowRightIcon
+  },
   props: {
     value: {
       type: String,
@@ -32,10 +37,39 @@ button
   background: $primary
   cursor: pointer
   transition: .2s ease-in-out
+  display: flex
+  align-items: center
+  justify-content: center
 
   .value
     color: $white
 
   &:hover
     background: darken($primary, 5%)
+
+  &.textMore
+    background: none
+    padding-left: 0
+
+    .value
+      color: $primary
+
+    svg
+      color: $primary
+      height: 2.2rem
+      width: 2.2rem
+      margin-left: $xxs
+
+  &.invert
+    background: $white
+
+    .value
+      color: $primary
+
+@media screen and (max-width: 768px)
+  button
+    &.textMore
+      padding: 0
+      background: $ui5
+      width: 100%
 </style>
