@@ -48,7 +48,7 @@ export default Vue.extend({
 })
 </script>
 
-<style lang="sass">
+<style scoped lang="sass">
 .container
   height: 100vh
   display: flex

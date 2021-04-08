@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <NavAdmin />
-    <div class="subnav">
+    <div class="content">
       <div class="actions">
         <div class="active">
           <BoxIcon />
@@ -45,8 +45,9 @@ export default Vue.extend({
 <style scoped lang="sass">
 .container
   display: flex
+  background: $ui6
 
-  .subnav
+  .content
     margin: 0 auto
 
   .actions

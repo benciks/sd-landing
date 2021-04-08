@@ -43,6 +43,7 @@ button
 
   .value
     color: $white
+    white-space: nowrap
 
   &:hover
     background: darken($primary, 5%)
