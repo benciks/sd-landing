@@ -23,11 +23,11 @@
         </p>
       </div>
       <div class="inputs">
-        <SInput placeholder="Meno školy" class="name" :value="title" />
-        <SInput placeholder="Url" class="url" :value="url" />
-        <SInput placeholder="Adresa" class="adress" :value="address" />
-        <SInput placeholder="PSČ" class="postal" :value="postal" />
-        <SInput placeholder="Mesto" class="city" :value="city" />
+        <SInput placeholder="Meno školy" class="name" />
+        <SInput placeholder="Url" class="url" />
+        <SInput placeholder="Adresa" class="adress" />
+        <SInput placeholder="PSČ" class="postal" />
+        <SInput placeholder="Mesto" class="city" />
       </div>
     </div>
   </div>
@@ -43,17 +43,7 @@ export default Vue.extend({
     BoxIcon
   },
   layout: 'auth',
-  middleware: 'auth',
-  data () {
-    return {
-      id: '1',
-      title: 'Stredna priemyselna skola dopravna',
-      address: 'Studentska 23',
-      url: 'spsdtt.sk',
-      postal: '92601',
-      city: 'Trnava'
-    }
-  }
+  middleware: 'auth'
 })
 </script>
 
