@@ -1,11 +1,18 @@
 <template>
-  <input :type="type" :placeholder="placeholder" :value="modelValue" class="copy-m" @input="updateValue($event.target.value)">
+  <div class="input">
+    <SearchIcon />
+    <input :type="type" :placeholder="placeholder" :value="modelValue" class="copy-m" @input="updateValue($event.target.value)">
+  </div>
 </template>
 
 <script>
 import Vue from 'vue'
+import { SearchIcon } from 'vue-feather-icons'
 
 export default Vue.extend({
+  components: {
+    SearchIcon
+  },
   props: {
     type: {
       type: String,
@@ -29,13 +36,16 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="sass">
-input
+.input
   height: 4.5rem
   width: 100%
   border: 1px solid $ui5
+  background: $white
   border-radius: 8px
   padding-left: $s
   transition: .2s ease-in-out
+  display: flex
+  align-items: center
 
   &:hover
     border: 1px solid $ui4
@@ -45,5 +55,18 @@ input
 
   &::placeholder
     color: $ui4
+
+  input
+    border: none
+    outline: none
+    background: none
+    width: 100%
+    height: 100%
+
+  svg
+    height: 18px
+    width: 18px
+    color: $ui4
+    margin-right: $xs
 
 </style>

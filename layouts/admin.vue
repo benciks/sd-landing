@@ -6,7 +6,7 @@
         <div class="active">
           <BoxIcon />
           <p class="copy-m bold">
-            {{ $route.name }}
+            {{ route }}
           </p>
         </div>
         <div class="user">
@@ -32,7 +32,20 @@ export default Vue.extend({
     BoxIcon
   },
   computed: {
-    ...mapGetters(['loggedInUser'])
+    ...mapGetters(['loggedInUser']),
+    route () {
+      switch (this.$route.name) {
+        case 'admin':
+          return 'Domov'
+        case 'admin-schools':
+          return 'Školy'
+        case 'admin-articles':
+          return 'Články'
+        case 'admin-users':
+          return 'Používatelia'
+      }
+      return undefined
+    }
   },
   methods: {
     async logout () {

@@ -113,7 +113,7 @@ export default Vue.extend({
 
       .role
         position: absolute
-        left: 729px
+        left: 760px
         padding: $xxs $s
         background: $primary
         border-radius: 99em
@@ -146,7 +146,7 @@ export default Vue.extend({
 
     .role
       position: absolute
-      left: 729px
+      left: 760px
 
     p
       color: $ui4

@@ -6,7 +6,9 @@
       </h3>
       <div>
         <SInput type="Search" placeholder="Hľadajte školu" class="search" />
-        <SButton value="Pridať školu" />
+        <NuxtLink to="/admin/schools/create">
+          <SButton value="Pridať školu" to="/admin/schools/create" />
+        </NuxtLink>
       </div>
     </div>
     <div class="columns">
@@ -102,6 +104,9 @@ export default Vue.extend({
 
     div
       display: flex
+
+      a
+        text-decoration: none
 
       .search
         width: 32rem

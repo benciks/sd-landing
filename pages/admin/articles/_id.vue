@@ -2,10 +2,10 @@
   <div class="container">
     <div class="head">
       <div class="title">
-        <ArrowLeftIcon />
-        <h3 class="order-3 bold">
-          Pridať školu
-        </h3>
+        <input v-model="title" type="text" class="order-3 bold" placeholder="Zadajte názov stránky">
+        <div class="url copy-m">
+          /clanky/ <input v-model="url" type="text" class="copy-m bold" disabled>
+        </div>
       </div>
       <div class="actions">
         <SButton type="invert" value="Uložiť ako koncept" />
@@ -31,11 +31,10 @@
 
 <script>
 import Vue from 'vue'
-import { ArrowLeftIcon, EditIcon } from 'vue-feather-icons'
+import { EditIcon } from 'vue-feather-icons'
 
 export default Vue.extend({
   components: {
-    ArrowLeftIcon,
     EditIcon
   },
   layout: 'auth',
@@ -67,10 +66,21 @@ export default Vue.extend({
   align-items: center
 
   .title
-    display: flex
+    div
+      display: flex
+      color: $ui2
 
-    svg
-      margin-right: $xs
+      input
+        color: $ui2
+
+    input
+      border: none
+      outline: none
+      background: none
+      color: $ui1
+
+      &::placeholder
+        color: $ui4
 
   .actions
     display: flex
