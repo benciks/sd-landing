@@ -53,6 +53,7 @@ export default Vue.extend({
     p
       color: $ui2
       margin-top: 2rem
+      max-width: 44rem
 
 .content
   max-width: 90rem
