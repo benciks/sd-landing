@@ -8,12 +8,16 @@
         </h3>
       </div>
       <div class="actions">
-        <SButton type="invert" value="Uložiť ako koncept" />
-        <SButton type="primary" value="Publikovať" />
+        <SButton type="invert" value="Uložiť ako koncept" @click.native="saveConcept" />
+        <SButton type="primary" value="Publikovať" @click.native="publish" />
       </div>
     </div>
     <div class="image-upload">
-      <SButton type="Primary" value="Nahrať fotku" />
+      <img v-if="imgUrl" :src="imgUrl" alt="">
+      <div>
+        <input v-if="!fileSelected" type="file" @change="inputChange">
+        <SButton v-if="fileSelected" type="Primary" value="Nahrať fotku" @click.native="onUpload" />
+      </div>
     </div>
     <div class="details">
       <div class="section-title">
@@ -23,11 +27,11 @@
         </p>
       </div>
       <div class="inputs">
-        <SInput placeholder="Meno školy" class="name" :value="title" />
-        <SInput placeholder="Url" class="url" :value="url" />
-        <SInput placeholder="Adresa" class="adress" :value="address" />
-        <SInput placeholder="PSČ" class="postal" :value="postal" />
-        <SInput placeholder="Mesto" class="city" :value="city" />
+        <SInput v-model="school.name" placeholder="Meno školy" class="name" :model-value="school.name" />
+        <SInput v-model="school.url" placeholder="Url" class="url" :model-value="school.url" />
+        <SInput v-model="school.address" placeholder="Adresa" class="adress" :model-value="school.address" />
+        <SInput v-model="school.postal" placeholder="PSČ" class="postal" :model-value="school.postal" />
+        <SInput v-model="school.city" placeholder="Mesto" class="city" :model-value="school.city" />
       </div>
     </div>
   </div>
@@ -46,12 +50,104 @@ export default Vue.extend({
   middleware: 'auth',
   data () {
     return {
-      id: '1',
-      title: 'Stredna priemyselna skola dopravna',
-      address: 'Studentska 23',
-      url: 'spsdtt.sk',
-      postal: '92601',
-      city: 'Trnava'
+      fileSelected: false,
+      imgUrl: '',
+      image: '',
+      school: {},
+      headers: {
+        'Content-Type': 'application/octet-stream',
+        Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjIsInVwbG9hZGVySWQiOiJzaW1vbiIsInVwbG9hZGVyVHlwZSI6IlVTRVIiLCJleHAiOjE2Mjg0NDUzNjh9.AAMzQ1vSBrS_Afk3f1hMxmZaYyuTmbRFNIqzeWulHLA'
+      }
+    }
+  },
+  computed: {
+    schoolUrl () {
+      return '/schools/' + this.$route.params.id
+    }
+  },
+  beforeMount () {
+    this.fetchSchool()
+  },
+  methods: {
+    composeSchool (schoolStatus) {
+      return {
+        name: this.school.name,
+        url: this.school.url,
+        address: this.school.address,
+        postal: this.school.postal,
+        city: this.school.city,
+        img: '',
+        status: schoolStatus
+      }
+    },
+    async fetchSchool () {
+      if (this.$route.params.id !== 'create') {
+        this.school = await this.$axios.$get(this.schoolUrl)
+      }
+    },
+    async saveConcept () {
+      const school = this.composeSchool('unpublished')
+
+      if (this.$route.params.id !== 'create') {
+        await this.$axios.$patch(this.schoolUrl, school)
+      } else {
+        await this.$axios.$post('/schools', school)
+      }
+      await this.$router.push('/admin/schools')
+    },
+    async publish () {
+      const school = this.composeSchool('published')
+
+      if (this.$route.params.id !== 'create') {
+        await this.$axios.$patch(this.schoolUrl, school)
+      } else {
+        await this.$axios.$post('/schools', school)
+      }
+      await this.$router.push('/admin/schools')
+    },
+    inputChange (event, image) {
+      this.fileSelected = event.target.files[0]
+      this.imgUrl = URL.createObjectURL(this.fileSelected)
+    },
+    dataURItoBlob (dataURI) {
+      // convert base64 to raw binary data held in a string
+      // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+      const byteString = atob(dataURI.split(',')[1])
+
+      // separate out the mime component
+      const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+      // write the bytes of the string to an ArrayBuffer
+      const ab = new ArrayBuffer(byteString.length)
+
+      // create a view into the buffer
+      const ia = new Uint8Array(ab)
+
+      // set the bytes of the buffer to the correct values
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i)
+      }
+
+      // write the ArrayBuffer to a blob, and you're done
+      return new Blob([ab], { type: mimeString })
+    },
+    getBase64 (file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = error => reject(error)
+      })
+    },
+
+    async onUpload () {
+      const data = await this.getBase64(this.fileSelected)
+
+      const blob = this.dataURItoBlob(data)
+
+      const res = await this.$axios.post('https://file.dokedu.org/upload', blob, {
+        headers: this.headers
+      })
     }
   }
 })
@@ -92,6 +188,17 @@ export default Vue.extend({
   background: $white
   border-radius: 8px
   border: 1px solid $ui5
+  position: relative
+
+  img
+    position: absolute
+    height: 100%
+    width: 100%
+    object-fit: cover
+    border-radius: 8px
+
+  div
+    z-index: 1
 
 .details
   max-width: 68rem

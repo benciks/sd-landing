@@ -28,10 +28,10 @@
     <div class="items">
       <div v-for="school in schools" :key="school.url" class="item">
         <p class="copy-m bold">
-          {{ school.title }}
+          {{ school.name }}
         </p>
         <p class="address copy-m">
-          {{ school.address }}
+          {{ school.address }}, {{ school.city }}
         </p>
         <p class="url copy-m">
           {{ school.url }}
@@ -66,29 +66,15 @@ export default Vue.extend({
   middleware: 'auth',
   data () {
     return {
-      schools: [
-        {
-          id: '1',
-          title: 'Stredna priemyselna skola dopravna',
-          address: 'Studentska 23',
-          url: 'spsdtt.sk',
-          status: 'published'
-        },
-        {
-          id: '2',
-          title: 'Stredna priemyselna skola dopravna',
-          address: 'Studentska 23',
-          url: 'sdtt.sk',
-          status: 'unpublished'
-        },
-        {
-          id: '3',
-          title: 'Stredna priemyselna skola dopravna',
-          address: 'Studentska 23',
-          url: 'stt.sk',
-          status: 'published'
-        }
-      ]
+      schools: []
+    }
+  },
+  beforeMount () {
+    this.fetchSchools()
+  },
+  methods: {
+    async fetchSchools () {
+      this.schools = await this.$axios.$get('/schools')
     }
   }
 })
