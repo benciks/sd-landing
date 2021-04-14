@@ -51,8 +51,8 @@ export default Vue.extend({
   data () {
     return {
       fileSelected: false,
-      imgUrl: '',
       image: '',
+      tempImg: '',
       school: {},
       headers: {
         'Content-Type': 'application/octet-stream',
@@ -63,6 +63,13 @@ export default Vue.extend({
   computed: {
     schoolUrl () {
       return '/schools/' + this.$route.params.id
+    },
+    imgUrl () {
+      if (this.tempImg) {
+        return this.tempImg
+      } else {
+        return this.school.img
+      }
     }
   },
   beforeMount () {
@@ -76,7 +83,7 @@ export default Vue.extend({
         address: this.school.address,
         postal: this.school.postal,
         city: this.school.city,
-        img: '',
+        img: this.tempImg,
         status: schoolStatus
       }
     },
@@ -107,7 +114,7 @@ export default Vue.extend({
     },
     inputChange (event, image) {
       this.fileSelected = event.target.files[0]
-      this.imgUrl = URL.createObjectURL(this.fileSelected)
+      this.tempImg = URL.createObjectURL(this.fileSelected)
     },
     dataURItoBlob (dataURI) {
       // convert base64 to raw binary data held in a string
@@ -148,6 +155,10 @@ export default Vue.extend({
       const res = await this.$axios.post('https://file.dokedu.org/upload', blob, {
         headers: this.headers
       })
+
+      if (res.status === 200) {
+        this.tempImg = 'https://file.dokedu.org/file/' + res.data.id
+      }
     }
   }
 })
