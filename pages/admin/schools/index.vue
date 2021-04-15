@@ -7,7 +7,7 @@
       <div>
         <SInput v-model="searchQuery" type="Search" placeholder="Hľadajte školu" class="search" />
         <NuxtLink to="/admin/schools/create">
-          <SButton value="Pridať školu" to="/admin/schools/create" />
+          <SButton value="Pridať školu" />
         </NuxtLink>
       </div>
     </div>

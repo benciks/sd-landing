@@ -5,7 +5,7 @@
         Články
       </h3>
       <div>
-        <SInput type="Search" placeholder="Hľadajte článok" class="search" />
+        <SInput v-model="searchQuery" type="Search" placeholder="Hľadajte článok" class="search" />
         <NuxtLink to="/admin/articles/create">
           <SButton value="Pridať Článok" />
         </NuxtLink>
@@ -26,15 +26,15 @@
       </p>
     </div>
     <div class="items">
-      <div v-for="article in articles" :key="article.id" class="item">
+      <div v-for="article in filteredArticles" :key="article.url" class="item">
         <p class="copy-m bold">
-          {{ article.title }}
+          {{ article.name }}
         </p>
         <p class="author copy-m">
           {{ article.author }}
         </p>
         <p class="edited copy-m">
-          {{ article.edited }}
+          {{ article.updatedAt }}
         </p>
         <div v-if="article.status === 'published'" class="status published">
           <p class="copy-s">
@@ -46,9 +46,25 @@
             Nepublikované
           </p>
         </div>
-        <NuxtLink :to="'/admin/articles/' + article.id" class="more">
-          <MoreVerticalIcon />
-        </NuxtLink>
+        <SDropdown class="more">
+          <template #toggler>
+            <MoreVerticalIcon />
+          </template>
+          <SDropdownContent>
+            <NuxtLink :to="'/admin/articles/' + article.url" class="link">
+              <EditIcon />
+              <div class="copy-m">
+                Upraviť článok
+              </div>
+            </NuxtLink>
+            <div class="link" @click="deleteArticle(article.url)">
+              <TrashIcon />
+              <div class="copy-m">
+                Zmazať článok
+              </div>
+            </div>
+          </SDropdownContent>
+        </SDropdown>
       </div>
     </div>
   </div>
@@ -56,39 +72,45 @@
 
 <script>
 import Vue from 'vue'
-import { MoreVerticalIcon } from 'vue-feather-icons'
+import { MoreVerticalIcon, EditIcon, TrashIcon } from 'vue-feather-icons'
 
 export default Vue.extend({
   components: {
-    MoreVerticalIcon
+    MoreVerticalIcon,
+    EditIcon,
+    TrashIcon
   },
   layout: 'admin',
   middleware: 'auth',
   data () {
     return {
-      articles: [
-        {
-          id: '1',
-          title: 'Zameranie odborov',
-          author: 'John doe',
-          edited: 'today',
-          status: 'published'
-        },
-        {
-          id: '2',
-          title: 'Aktivity',
-          author: 'John doe',
-          edited: 'yesterday',
-          status: 'unpublished'
-        },
-        {
-          id: '3',
-          title: 'Podujatia',
-          author: 'John doe',
-          edited: 'today',
-          status: 'published'
-        }
-      ]
+      searchQuery: '',
+      articles: []
+    }
+  },
+  computed: {
+    filteredArticles () {
+      if (this.searchQuery) {
+        return this.articles.filter((item) => {
+          return item.name.startsWith(this.searchQuery) || item.author.startsWith(this.searchQuery)
+        })
+      } else {
+        return this.articles
+      }
+    }
+  },
+  beforeMount () {
+    this.fetchArticles()
+  },
+  methods: {
+    async fetchArticles () {
+      this.articles = await this.$axios.$get('/articles')
+    },
+    async deleteArticle (articleUrl) {
+      const url = '/articles/' + articleUrl
+      console.log(articleUrl)
+      await this.$axios.$delete(url)
+      await this.fetchArticles()
     }
   }
 })

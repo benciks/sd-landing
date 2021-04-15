@@ -19,7 +19,7 @@
       <UndoIcon @click="editor.chain().focus().undo().run()" />
       <RedoIcon @click="editor.chain().focus().redo().run()" />
     </div>
-    <editor-content :editor="editor" :v-model="content" />
+    <editor-content :editor="editor" :value="modelValue" @input="updateValue($event.target.value)" />
   </div>
 </template>
 
@@ -65,21 +65,38 @@ export default {
     UndoIcon,
     RedoIcon
   },
-
-  data () {
-    return {
-      editor: null,
-      content: ''
+  props: {
+    value: {
+      type: String,
+      default: ''
     }
   },
+  data () {
+    return {
+      editor: null
+    }
+  },
+  watch: {
+    value (value) {
+      const isSame = this.editor.getHTML() === value
 
+      if (isSame) {
+        return
+      }
+
+      this.editor.commands.setContent(this.value, false)
+    }
+
+  },
   mounted () {
     this.editor = new Editor({
-      content: '<p>I’m running tiptap with Vue.js. 🎉</p>',
-      extensions: defaultExtensions()
+      content: this.value,
+      extensions: defaultExtensions(),
+      onUpdate: () => {
+        this.$emit('input', this.editor.getHTML())
+      }
     })
   },
-
   beforeDestroy () {
     this.editor.destroy()
   }
