@@ -5,7 +5,7 @@
         Školy
       </h3>
       <div>
-        <SInput type="Search" placeholder="Hľadajte školu" class="search" />
+        <SInput v-model="searchQuery" type="Search" placeholder="Hľadajte školu" class="search" />
         <NuxtLink to="/admin/schools/create">
           <SButton value="Pridať školu" to="/admin/schools/create" />
         </NuxtLink>
@@ -23,7 +23,7 @@
       </p>
     </div>
     <div class="items">
-      <div v-for="school in schools" :key="school.url" class="item">
+      <div v-for="school in filteredSchools" :key="school.url" class="item">
         <p class="copy-m bold">
           {{ school.name }}
         </p>
@@ -52,7 +52,7 @@
               </div>
             </NuxtLink>
             <div class="link" @click="deleteSchool(school.id)">
-              <DeleteIcon />
+              <TrashIcon />
               <div class="copy-m">
                 Zmazať školu
               </div>
@@ -66,19 +66,31 @@
 
 <script>
 import Vue from 'vue'
-import { MoreVerticalIcon, EditIcon, DeleteIcon } from 'vue-feather-icons'
+import { MoreVerticalIcon, EditIcon, TrashIcon } from 'vue-feather-icons'
 
 export default Vue.extend({
   components: {
     MoreVerticalIcon,
     EditIcon,
-    DeleteIcon
+    TrashIcon
   },
   layout: 'admin',
   middleware: 'auth',
   data () {
     return {
+      searchQuery: '',
       schools: []
+    }
+  },
+  computed: {
+    filteredSchools () {
+      if (this.searchQuery) {
+        return this.schools.filter((item) => {
+          return item.name.startsWith(this.searchQuery) || item.address.startsWith(this.searchQuery)
+        })
+      } else {
+        return this.schools
+      }
     }
   },
   beforeMount () {
