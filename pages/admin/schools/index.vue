@@ -18,9 +18,6 @@
       <p class="label address">
         Adresa
       </p>
-      <p class="label url">
-        Url
-      </p>
       <p class="label status">
         Status
       </p>
@@ -32,9 +29,6 @@
         </p>
         <p class="address copy-m">
           {{ school.address }}, {{ school.city }}
-        </p>
-        <p class="url copy-m">
-          {{ school.url }}
         </p>
         <div v-if="school.status === 'published'" class="status published">
           <p class="copy-s">
@@ -134,11 +128,7 @@ export default Vue.extend({
 
       .address
         position: absolute
-        left: 367px
-
-      .url
-        position: absolute
-        left: 572px
+        left: 420px
 
       .status
         padding: $xxs $s
@@ -217,11 +207,7 @@ export default Vue.extend({
 
     .address
       position: absolute
-      left: 367px
-
-    .url
-      position: absolute
-      left: 572px
+      left: 420px
 
     .status
       position: absolute

@@ -85,7 +85,6 @@ export default Vue.extend({
         address: this.school.address,
         postal: this.school.postal,
         city: this.school.city,
-        img: this.tempImg,
         status: schoolStatus
       }
     },
@@ -96,6 +95,7 @@ export default Vue.extend({
     },
     async saveConcept () {
       const school = this.composeSchool('unpublished')
+      if (this.tempImg) { school.img = this.tempImg }
 
       if (this.$route.params.id !== 'create') {
         await this.$axios.$patch(this.schoolUrl, school)
@@ -106,6 +106,7 @@ export default Vue.extend({
     },
     async publish () {
       const school = this.composeSchool('published')
+      if (this.tempImg) { school.img = this.tempImg }
 
       if (this.$route.params.id !== 'create') {
         await this.$axios.$patch(this.schoolUrl, school)
