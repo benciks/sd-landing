@@ -67,6 +67,9 @@ button
     .value
       color: $primary
 
+    &:hover
+      background: darken($white, 3%)
+
 @media screen and (max-width: 768px)
   button
     &.textMore

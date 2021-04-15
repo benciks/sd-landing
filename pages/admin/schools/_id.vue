@@ -2,7 +2,9 @@
   <div class="container">
     <div class="head">
       <div class="title">
-        <ArrowLeftIcon />
+        <NuxtLink to="/admin/schools">
+          <ArrowLeftIcon />
+        </NuxtLink>
         <h3 class="order-3 bold">
           Pridať školu
         </h3>
@@ -15,8 +17,8 @@
     <div class="image-upload">
       <img v-if="imgUrl" :src="imgUrl" alt="">
       <div>
-        <input v-if="!fileSelected" type="file" @change="inputChange">
-        <SButton v-if="fileSelected" type="Primary" value="Nahrať fotku" @click.native="onUpload" />
+        <SFileUpload @change="inputChange" />
+        <SButton v-if="tempImg" type="invert" value="Nahrať" @click.native="onUpload" />
       </div>
     </div>
     <div class="details">
@@ -149,7 +151,6 @@ export default Vue.extend({
 
     async onUpload () {
       const data = await this.getBase64(this.fileSelected)
-
       const blob = this.dataURItoBlob(data)
 
       const res = await this.$axios.post('https://file.dokedu.org/upload', blob, {
@@ -180,8 +181,17 @@ export default Vue.extend({
   .title
     display: flex
 
-    svg
+    a
+      height: 24px
+      width: 24px
       margin-right: $xs
+
+      svg
+        color: $ui1
+        transition: .2s ease-in-out
+
+        &.hover
+          color: $ui2
 
   .actions
     display: flex
@@ -210,6 +220,10 @@ export default Vue.extend({
 
   div
     z-index: 1
+    display: flex
+
+    button
+      margin-left: $m
 
 .details
   max-width: 68rem

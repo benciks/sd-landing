@@ -1,6 +1,6 @@
 <template>
   <div class="input">
-    <SearchIcon />
+    <SearchIcon v-if="type === 'search'" />
     <input :type="type" :placeholder="placeholder" :value="modelValue" class="copy-m" @input="updateValue($event.target.value)">
   </div>
 </template>
