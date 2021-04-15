@@ -46,9 +46,25 @@
             Nepublikované
           </p>
         </div>
-        <NuxtLink :to="'/admin/schools/' + school.id" class="more">
-          <MoreVerticalIcon />
-        </NuxtLink>
+        <SDropdown class="more">
+          <template #toggler>
+            <MoreVerticalIcon />
+          </template>
+          <SDropdownContent>
+            <NuxtLink :to="'/admin/schools/' + school.id" class="link">
+              <EditIcon />
+              <div class="copy-m">
+                Upraviť školu
+              </div>
+            </NuxtLink>
+            <div class="link" @click="deleteSchool(school.id)">
+              <DeleteIcon />
+              <div class="copy-m">
+                Zmazať školu
+              </div>
+            </div>
+          </SDropdownContent>
+        </SDropdown>
       </div>
     </div>
   </div>
@@ -56,11 +72,13 @@
 
 <script>
 import Vue from 'vue'
-import { MoreVerticalIcon } from 'vue-feather-icons'
+import { MoreVerticalIcon, EditIcon, DeleteIcon } from 'vue-feather-icons'
 
 export default Vue.extend({
   components: {
-    MoreVerticalIcon
+    MoreVerticalIcon,
+    EditIcon,
+    DeleteIcon
   },
   layout: 'admin',
   middleware: 'auth',
@@ -75,6 +93,11 @@ export default Vue.extend({
   methods: {
     async fetchSchools () {
       this.schools = await this.$axios.$get('/schools')
+    },
+    async deleteSchool (schoolId) {
+      const url = '/schools/' + schoolId
+      await this.$axios.$delete(url)
+      await this.fetchSchools()
     }
   }
 })
@@ -135,13 +158,47 @@ export default Vue.extend({
       .more
         position: absolute
         right: $l
-        display: flex
-        align-items: center
+        height: 18px
 
         svg
           color: $ui4
           height: 18px
           width: 18px
+          cursor: pointer
+          transition: 0.2s ease-in-out
+
+          &:hover
+            color: $ui1
+
+        .link
+          text-decoration: none
+          display: flex
+          padding: $xs $l $xs $s
+          width: auto
+          white-space: nowrap
+          align-items: center
+          border: 1px solid $white
+          border-radius: 8px
+          transition: 0.2s ease-in-out
+          margin-bottom: $xs
+          cursor: pointer
+
+          &:hover
+            background: $ui6
+            border: 1px solid $ui5
+
+            div, svg
+              color: $primary
+
+          div
+            margin-left: $s
+            @extend %bold
+            color: $ui2
+            transition: 0.2s ease-in-out
+
+          svg
+            color: $ui2
+            transition: 0.2s ease-in-out
 
     .item:first-of-type
       border-radius: 8px 8px 0 0
