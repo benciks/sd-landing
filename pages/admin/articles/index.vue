@@ -34,7 +34,7 @@
           {{ article.author }}
         </p>
         <p class="edited copy-m">
-          {{ article.updatedAt }}
+          {{ normalizeDate(article.updatedAt) }}
         </p>
         <div v-if="article.status === 'published'" class="status published">
           <p class="copy-s">
@@ -57,7 +57,7 @@
                 Upraviť článok
               </div>
             </NuxtLink>
-            <div class="link" @click="deleteArticle(article.url)">
+            <div class="link" @click="deleteArticle(article.id)">
               <TrashIcon />
               <div class="copy-m">
                 Zmazať článok
@@ -106,11 +106,14 @@ export default Vue.extend({
     async fetchArticles () {
       this.articles = await this.$axios.$get('/articles')
     },
-    async deleteArticle (articleUrl) {
-      const url = '/articles/' + articleUrl
-      console.log(articleUrl)
+    async deleteArticle (articleId) {
+      const url = '/articles/' + articleId
+
       await this.$axios.$delete(url)
       await this.fetchArticles()
+    },
+    normalizeDate (date) {
+      return date.slice(0, 10)
     }
   }
 })
@@ -177,6 +180,41 @@ export default Vue.extend({
           color: $ui4
           height: 18px
           width: 18px
+          cursor: pointer
+          transition: 0.2s ease-in-out
+
+          &:hover
+            color: $ui1
+
+        .link
+          text-decoration: none
+          display: flex
+          padding: $xs $l $xs $s
+          width: auto
+          white-space: nowrap
+          align-items: center
+          border: 1px solid $white
+          border-radius: 8px
+          transition: 0.2s ease-in-out
+          margin-bottom: $xs
+          cursor: pointer
+
+          &:hover
+            background: $ui6
+            border: 1px solid $ui5
+
+            div, svg
+              color: $primary
+
+          div
+            margin-left: $s
+            @extend %bold
+            color: $ui2
+            transition: 0.2s ease-in-out
+
+          svg
+            color: $ui2
+            transition: 0.2s ease-in-out
 
     .item:first-of-type
       border-radius: 8px 8px 0 0

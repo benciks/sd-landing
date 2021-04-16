@@ -90,8 +90,6 @@ export default Vue.extend({
       const article = this.composeArticle('unpublished')
       if (this.tempImg) { article.img = this.tempImg }
 
-      console.log(article.content)
-
       if (this.$route.params.url !== 'create') {
         await this.$axios.$patch(this.articleUrl, article)
       } else {
