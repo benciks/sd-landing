@@ -1,15 +1,23 @@
 <template>
-  <div v-if="active" class="dropdown-content">
+  <div v-if="active" v-on-clickaway="away" class="dropdown-content">
     <slot />
   </div>
 </template>
 
 <script>
+import { mixin as clickaway } from 'vue-clickaway'
+
 export default {
+  mixins: [clickaway],
   inject: ['sharedState'],
   computed: {
     active () {
       return this.sharedState.active
+    }
+  },
+  methods: {
+    away () {
+      this.sharedState.active = false
     }
   }
 }

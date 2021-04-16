@@ -113,7 +113,8 @@ export default Vue.extend({
       await this.fetchArticles()
     },
     normalizeDate (date) {
-      return date.slice(0, 10)
+      const normalDate = new Date(date)
+      return normalDate.getDay() + '.' + normalDate.getMonth() + '.' + normalDate.getFullYear()
     }
   }
 })
