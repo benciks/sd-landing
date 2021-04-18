@@ -35,9 +35,12 @@
     </div>
     <div class="items">
       <div v-for="user in filteredUsers" :key="user.id" class="item">
-        <p class="copy-m bold">
-          {{ user.name }}
-        </p>
+        <div>
+          <img :src="user.img" alt="">
+          <p class="copy-m bold">
+            {{ user.name }}
+          </p>
+        </div>
         <p class="email copy-m">
           {{ user.email }}
         </p>
@@ -158,6 +161,17 @@ export default Vue.extend({
 
         p
           color: $white
+
+      div
+        display: flex
+        align-items: center
+
+        img
+          height: 2.4rem
+          width: 2.4rem
+          border-radius: 99em
+          object-fit: cover
+          margin-right: $xs
 
     .item:first-of-type
       border-radius: 8px 8px 0 0

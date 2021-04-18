@@ -10,10 +10,31 @@
           </p>
         </div>
         <div class="user">
-          <p class="copy-m bold">
-            {{ loggedInUser.name }}
-          </p>
-          <LogOutIcon @click="logout()" />
+          <SDropdown>
+            <template #toggler>
+              <div class="toggle">
+                <img :src="loggedInUser.img" alt="">
+                <p class="copy-m bold">
+                  {{ loggedInUser.name }}
+                </p>
+                <ChevronDownIcon />
+              </div>
+            </template>
+            <SDropdownContent>
+              <NuxtLink to="/admin/profile/" class="link">
+                <UserIcon />
+                <div class="copy-m">
+                  Upraviť profil
+                </div>
+              </NuxtLink>
+              <div class="link" @click="logout()">
+                <LogOutIcon />
+                <div class="copy-m">
+                  Odhlásiť sa
+                </div>
+              </div>
+            </SDropdownContent>
+          </SDropdown>
         </div>
       </div>
       <Nuxt />
@@ -24,12 +45,14 @@
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { LogOutIcon, BoxIcon } from 'vue-feather-icons'
+import { LogOutIcon, BoxIcon, ChevronDownIcon, UserIcon } from 'vue-feather-icons'
 
 export default Vue.extend({
   components: {
     LogOutIcon,
-    BoxIcon
+    BoxIcon,
+    ChevronDownIcon,
+    UserIcon
   },
   computed: {
     ...mapGetters(['loggedInUser']),
@@ -83,13 +106,63 @@ export default Vue.extend({
         margin-right: $xs
 
     .user
-      display: flex
-      align-items: center
+      position: relative
+
+      .toggle
+        display: flex
+        align-items: center
+        cursor: pointer
+
+        img
+          border-radius: 99em
+          height: 2.4rem
+          width: 2.4rem
+          object-fit: cover
+          margin-right: $xs
+
+        p, svg
+          transition: 0.2s ease-in-out
+
+        svg
+          margin-left: $s
+
+        &:hover
+          p, svg
+            color: $ui1
 
       svg
         width: 20px
         height: 20px
         color: $ui3
-        margin-left: $s
         cursor: pointer
+
+      .link
+        text-decoration: none
+        display: flex
+        padding: $xs $l $xs $s
+        width: auto
+        white-space: nowrap
+        align-items: center
+        border: 1px solid $white
+        border-radius: 8px
+        transition: 0.2s ease-in-out
+        margin-bottom: $xs
+        cursor: pointer
+
+        &:hover
+          background: $ui6
+          border: 1px solid $ui5
+
+          div, svg
+            color: $primary
+
+        div
+          margin-left: $s
+          @extend %bold
+          color: $ui2
+          transition: 0.2s ease-in-out
+
+        svg
+          color: $ui2
+          transition: 0.2s ease-in-out
 </style>
