@@ -9,7 +9,9 @@
         <p class="copy-l">
           {{ post.description }}
         </p>
-        <SButton value="Zobraziť odbory" type="textMore" />
+        <NuxtLink to="/articles/zameranie-odborov">
+          <SButton value="Zobraziť odbory" type="textMore" />
+        </NuxtLink>
       </div>
     </div>
   </section>
@@ -48,6 +50,9 @@ section.train
       p
         margin: $xs 0 $l 0
         color: $ui2
+
+      a
+        text-decoration: none
 
 @media screen and (min-width: 768px)
   section.train

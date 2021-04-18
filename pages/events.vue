@@ -13,7 +13,7 @@
         <img src="@/static/travel.svg" alt="Travel illustration">
       </div>
     </div>
-    <div class="content" v-html="content" />
+    <div class="content" v-html="article.content" />
   </div>
 </template>
 
@@ -23,7 +23,15 @@ import Vue from 'vue'
 export default Vue.extend({
   data () {
     return {
-      content: '<h3>O podujatí</h3><p>Rezort dopravy a výstavby má snahu motivovať žiakov základných škôl k štúdiu na stredných odborných školách a následne k výberu povolania v oblasti dopravy, k rozvíjaniu a prehlbovaniu ich záujmu o zvolené povolanie a budovaniu ich vzťahu k budúcej profesii, a to najmä prostredníctvom organizovania zážitkových aktivít.\n</p>'
+      article: {}
+    }
+  },
+  beforeMount () {
+    this.getEvents()
+  },
+  methods: {
+    async getEvents () {
+      this.article = await this.$axios.$get('/articles/podujatia')
     }
   }
 })

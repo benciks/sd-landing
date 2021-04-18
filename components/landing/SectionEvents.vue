@@ -8,7 +8,9 @@
       <p class="copy-l">
         {{ events.description }}
       </p>
-      <SButton value="Zobraziť podujatia" type="invert" />
+      <NuxtLink to="/events">
+        <SButton value="Zobraziť podujatia" type="invert" />
+      </NuxtLink>
     </div>
   </section>
 </template>
@@ -56,6 +58,9 @@ section.events
     p
       color: $ui4
       margin: $xs 0 $xl 0
+
+    a
+      text-decoration: none
 
 @media screen and (min-width: 900px)
   section.events

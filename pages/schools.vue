@@ -14,9 +14,9 @@
       </div>
     </div>
     <div class="schools">
-      <NuxtLink v-for="school in schools" :key="school.id" class="school" :to="'/schools/' + school.id">
-        <Card :image="school.image" :title="school.title" :location="school.location" />
-      </NuxtLink>
+      <a v-for="school in filteredSchools" :key="school.id" class="school" :href="school.url">
+        <Card :image="school.img" :title="school.name" :location="school.city" />
+      </a>
     </div>
     <LandingSectionEvents />
   </div>
@@ -28,32 +28,20 @@ import Vue from 'vue'
 export default Vue.extend({
   data () {
     return {
-      schools: [
-        {
-          id: '1',
-          title: 'Spsdtt',
-          image: 'https://images.unsplash.com/photo-1549455905-7692efd12860?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-          location: 'Trnava'
-        },
-        {
-          id: '2',
-          title: 'Spsdtt',
-          image: 'https://images.unsplash.com/photo-1549455905-7692efd12860?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-          location: 'Trnava'
-        },
-        {
-          id: '2',
-          title: 'Spsdtt',
-          image: 'https://images.unsplash.com/photo-1549455905-7692efd12860?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-          location: 'Trnava'
-        },
-        {
-          id: '3',
-          title: 'Spsdtt',
-          image: 'https://images.unsplash.com/photo-1549455905-7692efd12860?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-          location: 'Trnava'
-        }
-      ]
+      schools: []
+    }
+  },
+  computed: {
+    filteredSchools () {
+      return this.schools.filter(school => school.status === 'published')
+    }
+  },
+  beforeMount () {
+    this.getSchools()
+  },
+  methods: {
+    async getSchools () {
+      this.schools = await this.$axios.$get('/schools')
     }
   }
 })

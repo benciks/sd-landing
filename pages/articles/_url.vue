@@ -2,17 +2,17 @@
   <div class="article">
     <div class="title">
       <div class="order-2 name">
-        {{ article.title }}
+        {{ article.name }}
       </div>
       <div>
         <CalendarIcon />
         <div class="copy-m">
-          {{ article.date }}
+          {{ normalizeDate(article.updatedAt) }}
         </div>
       </div>
     </div>
     <div class="image">
-      <img :src="article.image" alt="Article image">
+      <img :src="article.img" alt="Article image">
     </div>
     <div class="content" v-html="article.content" />
   </div>
@@ -28,14 +28,20 @@ export default Vue.extend({
   },
   data () {
     return {
-      article: {
-        id: '1',
-        title: 'Aktivity',
-        url: 'aktivity',
-        image: 'https://images.unsplash.com/photo-1549455905-7692efd12860?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-        date: 'dnes',
-        content: '<h3>O podujatí</h3><p>Rezort dopravy a výstavby má snahu motivovať žiakov základných škôl k štúdiu na stredných odborných školách a následne k výberu povolania v oblasti dopravy, k rozvíjaniu a prehlbovaniu ich záujmu o zvolené povolanie a budovaniu ich vzťahu k budúcej profesii, a to najmä prostredníctvom organizovania zážitkových aktivít.\n</p>'
-      }
+      article: {}
+    }
+  },
+  beforeMount () {
+    this.getArticle()
+  },
+  methods: {
+    async getArticle () {
+      const articleUrl = '/articles/' + this.$route.params.url
+      this.article = await this.$axios.$get(articleUrl)
+    },
+    normalizeDate (date) {
+      const normalDate = new Date(date)
+      return normalDate.getDate() + '.' + (normalDate.getMonth() + 1) + '.' + normalDate.getFullYear()
     }
   }
 })

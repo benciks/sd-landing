@@ -8,7 +8,9 @@
         <p class="copy-l">
           {{ hero.description }}
         </p>
-        <SButton value="Zistiť viac" />
+        <NuxtLink to="/events">
+          <SButton value="Zistiť viac" />
+        </NuxtLink>
       </div>
       <img src="@/static/airport.svg" alt="Airport illustration">
     </div>
@@ -55,6 +57,9 @@ section.hero
       p
         margin: $l 0 $xl 0
         color: $ui2
+
+      a
+        text-decoration: none
 
 @media screen and (min-width: 768px)
   section.hero

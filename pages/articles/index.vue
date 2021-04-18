@@ -15,7 +15,7 @@
     </div>
     <div class="articles">
       <NuxtLink v-for="article in articles" :key="article.id" class="school" :to="'/articles/' + article.url">
-        <Card :image="article.image" :title="article.title" :date="article.date" />
+        <Card :image="article.img" :title="article.name" :date="normalizeDate(article.updatedAt)" />
       </NuxtLink>
     </div>
     <LandingSectionEvents />
@@ -28,29 +28,19 @@ import Vue from 'vue'
 export default Vue.extend({
   data () {
     return {
-      articles: [
-        {
-          id: '1',
-          title: 'Aktivity',
-          url: 'aktivity',
-          image: 'https://images.unsplash.com/photo-1549455905-7692efd12860?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-          date: 'dnes'
-        },
-        {
-          id: '2',
-          title: 'Podujatia',
-          url: 'podujatia',
-          image: 'https://images.unsplash.com/photo-1549455905-7692efd12860?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-          date: '1.4.2021'
-        },
-        {
-          id: '2',
-          title: 'Zameranie odborov',
-          url: 'zameranie-odborov',
-          image: 'https://images.unsplash.com/photo-1549455905-7692efd12860?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-          date: '24.5.2020'
-        }
-      ]
+      articles: []
+    }
+  },
+  beforeMount () {
+    this.getArticles()
+  },
+  methods: {
+    async getArticles () {
+      this.articles = await this.$axios.$get('/articles')
+    },
+    normalizeDate (date) {
+      const normalDate = new Date(date)
+      return normalDate.getDate() + '.' + (normalDate.getMonth() + 1) + '.' + normalDate.getFullYear()
     }
   }
 })
