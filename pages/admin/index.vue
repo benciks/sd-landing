@@ -15,27 +15,36 @@
         <div />
       </div>
       <div class="edited">
-        <div v-for="article in articles" :key="article.title" class="article">
-          <div class="head">
-            <p class="copy-l bold">
-              {{ article.title }}
+        <NuxtLink v-for="article in filteredArticles" :key="article.url" :to="'/admin/articles/' + article.url">
+          <div class="article">
+            <div class="head">
+              <p class="copy-l bold">
+                {{ article.name }}
+              </p>
+              <p class="copy-s date">
+                {{ normalizeDate(article.updatedAt) }}
+              </p>
+            </div>
+            <p class="copy-m description">
+              {{ article.description }}
             </p>
-            <p class="copy-s date">
-              {{ article.lastEdited }}
-            </p>
-          </div>
-          <p class="copy-m description">
-            {{ article.description }}
-          </p>
-          <div class="details">
-            <p class="copy-s">
-              {{ article.author }}
-            </p>
-            <div class="div copy-s status">
-              {{ article.status }}
+            <div class="details">
+              <p class="copy-s">
+                {{ article.author }}
+              </p>
+              <div v-if="article.status === 'published'" class="status published">
+                <p class="copy-s">
+                  Publikované
+                </p>
+              </div>
+              <div v-if="article.status === 'unpublished'" class="status unpublished">
+                <p class="copy-s">
+                  Nepublikované
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </NuxtLink>
       </div>
     </div>
     <div class="stats">
@@ -55,7 +64,7 @@
               </p>
             </div>
             <h3 class="order-2">
-              {{ stats.schools }}
+              {{ schoolCount }}
             </h3>
           </div>
         </NuxtLink>
@@ -68,7 +77,7 @@
               </p>
             </div>
             <h3 class="order-2">
-              {{ stats.articles }}
+              {{ articleCount }}
             </h3>
           </div>
         </NuxtLink>
@@ -81,7 +90,7 @@
               </p>
             </div>
             <h3 class="order-2">
-              {{ stats.users }}
+              {{ userCount }}
             </h3>
           </div>
         </NuxtLink>
@@ -109,29 +118,9 @@ export default Vue.extend({
       welcome: {
         description: 'V administrátorskej časti môžete opravovať články, podujatia, obsah stránok a tak ďalej.'
       },
-      articles: [
-        {
-          title: 'Podujatia',
-          lastEdited: '12.3.2021',
-          description: 'Dni kariérového poradenstva Kam po skončení základnej školy - Študuj dopravu sa v roku 2020 neuskutočnili...',
-          author: 'Simon Bencik',
-          status: 'Nepublikované'
-        },
-        {
-          title: 'Aktivity',
-          lastEdited: '12.3.2021',
-          description: 'Dni kariérového poradenstva Kam po skončení základnej školy - Študuj dopravu sa v roku 2020 neuskutočnili...',
-          author: 'Simon Bencik',
-          status: 'Publikované'
-        },
-        {
-          title: 'Zameranie odborov',
-          lastEdited: '12.3.2021',
-          description: 'Dni kariérového poradenstva Kam po skončení základnej školy - Študuj dopravu sa v roku 2020 neuskutočnili...',
-          author: 'Simon Bencik',
-          status: 'Nepublikované'
-        }
-      ],
+      schools: [],
+      users: [],
+      articles: [],
       stats: {
         schools: '32',
         articles: '19',
@@ -140,7 +129,45 @@ export default Vue.extend({
     }
   },
   computed: {
-    ...mapGetters(['loggedInUser'])
+    ...mapGetters(['loggedInUser']),
+    schoolCount () {
+      return this.schools.length
+    },
+    articleCount () {
+      return this.articles.length
+    },
+    userCount () {
+      return this.users.length
+    },
+    filteredArticles () {
+      const articles = this.articles
+
+      const sorted = articles.sort(function (el) {
+        return new Date() - new Date(el.updatedAt)
+      })
+
+      return sorted.slice(0, 4)
+    }
+  },
+  beforeMount () {
+    this.fetchSchools()
+    this.fetchArticles()
+    this.fetchUsers()
+  },
+  methods: {
+    async fetchSchools () {
+      this.schools = await this.$axios.$get('/schools')
+    },
+    async fetchArticles () {
+      this.articles = await this.$axios.$get('/articles')
+    },
+    async fetchUsers () {
+      this.users = await this.$axios.$get('/users')
+    },
+    normalizeDate (date) {
+      const normalDate = new Date(date)
+      return normalDate.getDate() + '.' + (normalDate.getMonth() + 1) + '.' + normalDate.getFullYear()
+    }
   }
 })
 </script>
@@ -152,7 +179,14 @@ export default Vue.extend({
   .edited
     margin-left: $m
     margin-top: $xl
-    max-width: 43.7rem
+    width: 43.7rem
+
+    a
+      text-decoration: none
+
+      &:last-child
+        .article
+          margin-bottom: 0
 
 .welcome
   background: $white
@@ -180,7 +214,7 @@ export default Vue.extend({
   border: 1px solid $ui5
   border-radius: 6px
   padding: $l
-  margin-bottom: $m
+  margin-bottom: $s
 
   .description
     color: $ui3
@@ -208,13 +242,17 @@ export default Vue.extend({
       color: $ui3
 
     .status
-      background: $secondary
       padding: $xxs $s
       border-radius: 99em
-      color: $ui2
 
-.article:last-of-type
-  margin-bottom: 0
+    .published
+      background: $green
+
+      p
+        color: $white
+
+    .unpublished
+      background: $ui5
 
 .stats
   margin-top: $xl

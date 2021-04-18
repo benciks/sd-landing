@@ -114,7 +114,7 @@ export default Vue.extend({
     },
     normalizeDate (date) {
       const normalDate = new Date(date)
-      return normalDate.getDay() + '.' + normalDate.getMonth() + '.' + normalDate.getFullYear()
+      return normalDate.getDate() + '.' + (normalDate.getMonth() + 1) + '.' + normalDate.getFullYear()
     }
   }
 })
