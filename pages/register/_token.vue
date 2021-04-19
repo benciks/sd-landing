@@ -70,7 +70,7 @@ export default Vue.extend({
       width: 12.4rem
       margin-bottom: $xl
 
-    input
+    div
       margin-bottom: $s
 
     button

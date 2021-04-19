@@ -1,5 +1,5 @@
 <template>
-  <button :class="type">
+  <button :class="type" class="s-button">
     <span class="value copy-m bold">
       {{ value }}
     </span>

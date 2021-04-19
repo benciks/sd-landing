@@ -2,9 +2,14 @@
   <div class="container">
     <div class="form">
       <Logo class="logo" />
-      <SInput v-model="email" type="email" placeholder="Email" />
-      <SInput v-model="password" type="password" placeholder="Heslo" />
-      <SButton value="Prihlásiť" @click.native="onSubmit" />
+      <SInput v-model="email" type="email" placeholder="Email" class="input" />
+      <SInput v-model="password" type="password" placeholder="Heslo" class="input" />
+      <div class="buttons">
+        <SButton value="Prihlásiť" @click.native="onSubmit" />
+        <NuxtLink to="/login/forgot">
+          <SButton value="Zabudli ste heslo?" type="invert" />
+        </NuxtLink>
+      </div>
     </div>
   </div>
 </template>
@@ -58,10 +63,21 @@ export default Vue.extend({
       width: 12.4rem
       margin-bottom: $xl
 
-    input
+    .input
       margin-bottom: $s
 
-    button
+    .buttons
       margin-top: $l
+      justify-content: space-between
+      width: 100%
+
+      a
+        text-decoration: none
+
+        button
+          margin-top: $s
+
+      .s-button::v-deep
+        width: 100%
 
 </style>
