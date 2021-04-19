@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="articles">
-      <NuxtLink v-for="article in articles" :key="article.id" class="school" :to="'/articles/' + article.url">
+      <NuxtLink v-for="article in filteredArticles" :key="article.id" class="school" :to="'/articles/' + article.url">
         <Card :image="article.img" :title="article.name" :date="normalizeDate(article.updatedAt)" />
       </NuxtLink>
     </div>
@@ -29,6 +29,11 @@ export default Vue.extend({
   data () {
     return {
       articles: []
+    }
+  },
+  computed: {
+    filteredArticles () {
+      return this.articles.filter(article => article.status === 'published')
     }
   },
   beforeMount () {
