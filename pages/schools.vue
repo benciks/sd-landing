@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="schools">
-      <a v-for="school in filteredSchools" :key="school.id" class="school" :href="school.url">
+      <a v-for="school in filteredSchools" :key="school.id" class="school" :href="school.url" target="_blank">
         <Card :image="school.img" :title="school.name" :location="school.city" />
       </a>
     </div>
