@@ -37,7 +37,13 @@ export default Vue.extend({
   methods: {
     async getArticle () {
       const articleUrl = '/articles/' + this.$route.params.url
-      this.article = await this.$axios.$get(articleUrl)
+      const res = await this.$axios.get(articleUrl)
+
+      if (typeof res.data === 'object') {
+        this.article = res.data
+      } else {
+        this.$nuxt.error({ statusCode: 404 })
+      }
     },
     normalizeDate (date) {
       const normalDate = new Date(date)
