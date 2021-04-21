@@ -31,6 +31,11 @@ export default Vue.extend({
       articles: []
     }
   },
+  head () {
+    return {
+      title: 'Študuj Dopravu - Články'
+    }
+  },
   computed: {
     filteredArticles () {
       return this.articles.filter(article => article.status === 'published')

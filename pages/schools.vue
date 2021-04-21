@@ -31,6 +31,11 @@ export default Vue.extend({
       schools: []
     }
   },
+  head () {
+    return {
+      title: 'Študuj Dopravu - Školy'
+    }
+  },
   computed: {
     filteredSchools () {
       return this.schools.filter(school => school.status === 'published')

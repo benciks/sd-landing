@@ -31,6 +31,11 @@ export default Vue.extend({
       article: {}
     }
   },
+  head () {
+    return {
+      title: `Študuj Dopravu - ${this.article.name}`
+    }
+  },
   beforeMount () {
     this.getArticle()
   },

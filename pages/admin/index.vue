@@ -128,6 +128,11 @@ export default Vue.extend({
       }
     }
   },
+  head () {
+    return {
+      title: 'Študuj Dopravu - Admin'
+    }
+  },
   computed: {
     ...mapGetters(['loggedInUser']),
     schoolCount () {

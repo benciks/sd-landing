@@ -26,6 +26,11 @@ export default Vue.extend({
       article: {}
     }
   },
+  head () {
+    return {
+      title: 'Študuj Dopravu - Podujatia'
+    }
+  },
   beforeMount () {
     this.getEvents()
   },
