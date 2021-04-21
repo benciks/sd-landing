@@ -2,7 +2,7 @@
   <div class="container">
     <div class="form">
       <Logo class="logo" />
-      <SInput v-model="email" type="email" placeholder="Email" />
+      <SInput v-model="email" type="email" placeholder="Email" :model-value="email" :validation="validationMsg($v.email)" />
       <SButton value="Odoslať" @click.native="onSubmit" />
     </div>
   </div>
@@ -10,6 +10,13 @@
 
 <script>
 import Vue from 'vue'
+import { required, email } from 'vuelidate/lib/validators'
+import { validationMessage } from 'vuelidate-messages'
+
+const formMessages = {
+  required: () => 'Toto pole je povinné',
+  email: () => 'Zadajte email v správnom formáte'
+}
 
 export default Vue.extend({
   layout: 'auth',
@@ -18,18 +25,22 @@ export default Vue.extend({
       email: ''
     }
   },
+  validations: {
+    email: { required, email }
+  },
   methods: {
     async onSubmit () {
-      try {
+      this.$v.$touch()
+
+      if (!this.$v.$invalid) {
         await this.$axios.post('/login/forgot', {
           email: this.email
         })
 
         await this.$router.push('/')
-      } catch (e) {
-        this.error = e.error.data.message
       }
-    }
+    },
+    validationMsg: validationMessage(formMessages)
   }
 })
 </script>

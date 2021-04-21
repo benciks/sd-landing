@@ -2,9 +2,9 @@
   <div class="container">
     <div class="form">
       <Logo class="logo" />
-      <SInput v-model="email" type="email" placeholder="Email" />
-      <SInput v-model="password" type="password" placeholder="Heslo" />
-      <SInput v-model="repeatPassword" type="password" placeholder="Heslo" />
+      <SInput v-model="email" type="email" placeholder="Email" :model-value="email" :validation="validationMsg($v.email)" />
+      <SInput v-model="password" type="password" placeholder="Heslo" :model-value="password" :validation="validationMsg($v.password)" />
+      <SInput v-model="repeatPassword" type="password" placeholder="Heslo" :model-value="repeatPassword" :validation="validationMsg($v.repeatPassword)" />
       <SButton value="Resetovať heslo" @click.native="onSubmit" />
     </div>
   </div>
@@ -12,6 +12,15 @@
 
 <script>
 import Vue from 'vue'
+import { required, minLength, email, sameAs } from 'vuelidate/lib/validators'
+import { validationMessage } from 'vuelidate-messages'
+
+const formMessages = {
+  required: () => 'Toto pole je povinné',
+  minLength: ({ $params }) => `Heslo musí byť dlhé aspoň ${$params.minLength.min} znakov.`,
+  email: () => 'Zadajte email v správnom formáte',
+  sameAsPassword: () => 'Heslá by sa mali zhodovať'
+}
 
 export default Vue.extend({
   layout: 'auth',
@@ -22,9 +31,18 @@ export default Vue.extend({
       repeatPassword: ''
     }
   },
+  validations: {
+    email: { required, email },
+    password: { required, minLength: minLength(8) },
+    repeatPassword: {
+      sameAsPassword: sameAs('password')
+    }
+  },
   methods: {
     async onSubmit () {
-      try {
+      this.$v.$touch()
+
+      if (!this.$v.$invalid) {
         if (this.password === this.repeatPassword) {
           await this.$axios.post('/login/reset', {
             token: this.$route.params.token,
@@ -32,12 +50,10 @@ export default Vue.extend({
             password: this.password
           })
         }
-
         await this.$router.push('/login')
-      } catch (e) {
-        this.error = e.error.data.message
       }
-    }
+    },
+    validationMsg: validationMessage(formMessages)
   }
 })
 </script>

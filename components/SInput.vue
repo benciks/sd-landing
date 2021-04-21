@@ -1,7 +1,20 @@
 <template>
-  <div class="input">
-    <SearchIcon v-if="type === 'search'" />
-    <input :type="type" :placeholder="placeholder" :value="modelValue" class="copy-m" @input="updateValue($event.target.value)">
+  <div class="input-container">
+    <div class="input">
+      <SearchIcon v-if="type === 'search'" />
+      <input
+        :type="type"
+        :placeholder="placeholder"
+        :value="modelValue"
+        class="copy-m"
+        @input="updateValue($event.target.value)"
+      >
+    </div>
+    <div v-if="validation" class="error-container">
+      <p class="error copy-m">
+        {{ validation }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -25,6 +38,10 @@ export default Vue.extend({
     modelValue: {
       type: String,
       default: ''
+    },
+    validation: {
+      type: String,
+      default: ''
     }
   },
   methods: {
@@ -36,6 +53,9 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="sass">
+.input-container
+  width: 100%
+
 .input
   height: 4.5rem
   width: 100%
@@ -69,4 +89,9 @@ export default Vue.extend({
     color: $ui4
     margin-right: $xs
 
+.error-container
+  padding-left: $s
+
+  p
+    color: $red
 </style>

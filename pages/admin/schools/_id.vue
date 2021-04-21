@@ -29,11 +29,11 @@
         </p>
       </div>
       <div class="inputs">
-        <SInput v-model="school.name" placeholder="Meno školy" class="name" :model-value="school.name" />
-        <SInput v-model="school.url" placeholder="Url" class="url" :model-value="school.url" />
-        <SInput v-model="school.address" placeholder="Adresa" class="adress" :model-value="school.address" />
-        <SInput v-model="school.postal" placeholder="PSČ" class="postal" :model-value="school.postal" />
-        <SInput v-model="school.city" placeholder="Mesto" class="city" :model-value="school.city" />
+        <SInput v-model="school.name" placeholder="Meno školy" class="name" :model-value="school.name" :validation="validationMsg($v.school.name)" />
+        <SInput v-model="school.url" placeholder="Url" class="url" :model-value="school.url" :validation="validationMsg($v.school.url)" />
+        <SInput v-model="school.address" placeholder="Adresa" class="adress" :model-value="school.address" :validation="validationMsg($v.school.address)" />
+        <SInput v-model="school.postal" placeholder="PSČ" class="postal" :model-value="school.postal" :validation="validationMsg($v.school.postal)" />
+        <SInput v-model="school.city" placeholder="Mesto" class="city" :model-value="school.city" :validation="validationMsg($v.school.city)" />
       </div>
     </div>
   </div>
@@ -42,6 +42,13 @@
 <script>
 import Vue from 'vue'
 import { ArrowLeftIcon, BoxIcon } from 'vue-feather-icons'
+import { required, url } from 'vuelidate/lib/validators'
+import { validationMessage } from 'vuelidate-messages'
+
+const formMessages = {
+  required: () => 'Toto pole je povinné',
+  url: () => 'Zadajte platnú url adresu'
+}
 
 export default Vue.extend({
   components: {
@@ -60,6 +67,15 @@ export default Vue.extend({
         'Content-Type': 'application/octet-stream',
         Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjIsInVwbG9hZGVySWQiOiJzaW1vbiIsInVwbG9hZGVyVHlwZSI6IlVTRVIiLCJleHAiOjE2Mjg0NDUzNjh9.AAMzQ1vSBrS_Afk3f1hMxmZaYyuTmbRFNIqzeWulHLA'
       }
+    }
+  },
+  validations: {
+    school: {
+      name: { required },
+      url: { required, url },
+      address: { required },
+      postal: { required },
+      city: { required }
     }
   },
   computed: {
@@ -94,26 +110,39 @@ export default Vue.extend({
       }
     },
     async saveConcept () {
-      const school = this.composeSchool('unpublished')
-      if (this.tempImg) { school.img = this.tempImg }
+      this.$v.$touch()
 
-      if (this.$route.params.id !== 'create') {
-        await this.$axios.$patch(this.schoolUrl, school)
-      } else {
-        await this.$axios.$post('/schools', school)
+      if (!this.$v.$invalid) {
+        const school = this.composeSchool('unpublished')
+
+        if (this.tempImg) { school.img = this.tempImg } else {
+          school.img = ''
+        }
+
+        if (this.$route.params.id !== 'create') {
+          await this.$axios.$patch(this.schoolUrl, school)
+        } else {
+          await this.$axios.$post('/schools', school)
+        }
+        await this.$router.push('/admin/schools')
       }
-      await this.$router.push('/admin/schools')
     },
     async publish () {
-      const school = this.composeSchool('published')
-      if (this.tempImg) { school.img = this.tempImg }
+      this.$v.$touch()
 
-      if (this.$route.params.id !== 'create') {
-        await this.$axios.$patch(this.schoolUrl, school)
-      } else {
-        await this.$axios.$post('/schools', school)
+      if (!this.$v.$invalid) {
+        const school = this.composeSchool('published')
+        if (this.tempImg) { school.img = this.tempImg } else {
+          school.img = ''
+        }
+
+        if (this.$route.params.id !== 'create') {
+          await this.$axios.$patch(this.schoolUrl, school)
+        } else {
+          await this.$axios.$post('/schools', school)
+        }
+        await this.$router.push('/admin/schools')
       }
-      await this.$router.push('/admin/schools')
     },
     inputChange (event, image) {
       this.fileSelected = event.target.files[0]
@@ -149,7 +178,6 @@ export default Vue.extend({
         reader.onerror = error => reject(error)
       })
     },
-
     async onUpload () {
       const data = await this.getBase64(this.fileSelected)
       const blob = this.dataURItoBlob(data)
@@ -161,7 +189,8 @@ export default Vue.extend({
       if (res.status === 200) {
         this.tempImg = 'https://file.dokedu.org/file/' + res.data.id
       }
-    }
+    },
+    validationMsg: validationMessage(formMessages)
   }
 })
 </script>

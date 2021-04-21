@@ -37,6 +37,7 @@
 import Vue from 'vue'
 import { EditIcon } from 'vue-feather-icons'
 import { mapGetters } from 'vuex'
+import { required } from 'vuelidate/lib/validators'
 
 export default Vue.extend({
   components: {
@@ -53,6 +54,12 @@ export default Vue.extend({
         'Content-Type': 'application/octet-stream',
         Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjIsInVwbG9hZGVySWQiOiJzaW1vbiIsInVwbG9hZGVyVHlwZSI6IlVTRVIiLCJleHAiOjE2Mjg0NDUzNjh9.AAMzQ1vSBrS_Afk3f1hMxmZaYyuTmbRFNIqzeWulHLA'
       }
+    }
+  },
+  validations: {
+    article: {
+      name: { required },
+      url: { required }
     }
   },
   computed: {
@@ -87,26 +94,40 @@ export default Vue.extend({
       }
     },
     async saveConcept () {
-      const article = this.composeArticle('unpublished')
-      if (this.tempImg) { article.img = this.tempImg }
+      this.$v.$touch()
 
-      if (this.$route.params.url !== 'create') {
-        await this.$axios.$patch(this.articleUrl, article)
-      } else {
-        await this.$axios.$post('/articles', article)
+      if (!this.$v.$invalid) {
+        const article = this.composeArticle('unpublished')
+        if (this.tempImg) { article.img = this.tempImg } else {
+          article.img = ''
+        }
+        if (!article.content) { article.content = '' }
+
+        if (this.$route.params.url !== 'create') {
+          await this.$axios.$patch(this.articleUrl, article)
+        } else {
+          await this.$axios.$post('/articles', article)
+        }
+        await this.$router.push('/admin/articles')
       }
-      await this.$router.push('/admin/articles')
     },
     async publish () {
-      const article = this.composeArticle('published')
-      if (this.tempImg) { article.img = this.tempImg }
+      this.$v.$touch()
 
-      if (this.$route.params.url !== 'create') {
-        await this.$axios.$patch(this.articleUrl, article)
-      } else {
-        await this.$axios.$post('/articles', article)
+      if (!this.$v.$invalid) {
+        const article = this.composeArticle('published')
+        if (this.tempImg) { article.img = this.tempImg } else {
+          article.img = ''
+        }
+        if (!article.content) { article.content = '' }
+
+        if (this.$route.params.url !== 'create') {
+          await this.$axios.$patch(this.articleUrl, article)
+        } else {
+          await this.$axios.$post('/articles', article)
+        }
+        await this.$router.push('/admin/articles')
       }
-      await this.$router.push('/admin/articles')
     },
     inputChange (event, image) {
       this.fileSelected = event.target.files[0]

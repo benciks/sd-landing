@@ -12,7 +12,7 @@
           </template>
           <SDropdownContent>
             <div class="invite">
-              <SInput v-model="inviteEmail" placeholder="Zadajte email" class="invite-input" />
+              <SInput v-model="inviteEmail" placeholder="Zadajte email" class="invite-input" :model-value="inviteEmail" :validation="validationMsg($v.inviteEmail)" />
               <SButton value="Pozvať" @click.native="inviteUser()" />
             </div>
           </SDropdownContent>
@@ -59,6 +59,13 @@
 
 <script>
 import Vue from 'vue'
+import { required, email } from 'vuelidate/lib/validators'
+import { validationMessage } from 'vuelidate-messages'
+
+const formMessages = {
+  required: () => 'Toto pole je povinné',
+  email: () => 'Zadajte platnú emailovú adresu'
+}
 
 export default Vue.extend({
   layout: 'admin',
@@ -69,6 +76,9 @@ export default Vue.extend({
       inviteEmail: '',
       users: []
     }
+  },
+  validations: {
+    inviteEmail: { required, email }
   },
   computed: {
     filteredUsers () {
@@ -93,12 +103,17 @@ export default Vue.extend({
       return normalDate.getDate() + '.' + (normalDate.getMonth() + 1) + '.' + normalDate.getFullYear()
     },
     async inviteUser () {
-      const invite = {
-        email: this.inviteEmail
-      }
+      this.$v.$touch()
 
-      await this.$axios.$post('/inviteUser', invite)
-    }
+      if (!this.$v.$invalid) {
+        const invite = {
+          email: this.inviteEmail
+        }
+
+        await this.$axios.$post('/inviteUser', invite)
+      }
+    },
+    validationMsg: validationMessage(formMessages)
   }
 })
 </script>
@@ -132,6 +147,8 @@ export default Vue.extend({
 
         .invite-input
           width: 25rem
+          display: flex
+          flex-direction: column
 
   .items
 

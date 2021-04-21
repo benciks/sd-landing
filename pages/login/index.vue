@@ -2,8 +2,11 @@
   <div class="container">
     <div class="form">
       <Logo class="logo" />
-      <SInput v-model="email" type="email" placeholder="Email" class="input" />
-      <SInput v-model="password" type="password" placeholder="Heslo" class="input" />
+      <SInput v-model="email" type="email" placeholder="Email" :model-value="email" :validation="validationMsg($v.email)" />
+      <SInput v-model="password" type="password" placeholder="Heslo" :model-value="name" :validation="validationMsg($v.password)" />
+      <p v-if="failed" class="error">
+        Email alebo heslo je nesprávne
+      </p>
       <div class="buttons">
         <SButton value="Prihlásiť" @click.native="onSubmit" />
         <NuxtLink to="/login/forgot">
@@ -16,6 +19,13 @@
 
 <script>
 import Vue from 'vue'
+import { required, email } from 'vuelidate/lib/validators'
+import { validationMessage } from 'vuelidate-messages'
+
+const formMessages = {
+  required: () => 'Toto pole je povinné',
+  email: () => 'Zadajte email v správnom formáte'
+}
 
 export default Vue.extend({
   layout: 'auth',
@@ -23,24 +33,35 @@ export default Vue.extend({
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      failed: false
     }
+  },
+  validations: {
+    email: { required, email },
+    password: { required }
   },
   methods: {
     async onSubmit () {
-      try {
-        await this.$auth.loginWith('local', {
-          data: {
-            email: this.email,
-            password: this.password
-          }
-        })
+      this.$v.$touch()
+
+      if (!this.$v.$invalid) {
+        try {
+          await this.$auth.loginWith('local', {
+            data: {
+              email: this.email,
+              password: this.password
+            }
+          })
+        } catch (e) {
+          this.$router.push('/login')
+          this.failed = true
+        }
 
         this.$router.push('/admin')
-      } catch (e) {
-        this.error = e.error.data.message
       }
-    }
+    },
+    validationMsg: validationMessage(formMessages)
   }
 })
 </script>
@@ -63,8 +84,11 @@ export default Vue.extend({
       width: 12.4rem
       margin-bottom: $xl
 
-    .input
+    div
       margin-bottom: $s
+
+    .error
+      color: $red
 
     .buttons
       margin-top: $l

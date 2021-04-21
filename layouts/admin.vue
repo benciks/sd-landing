@@ -1,43 +1,46 @@
 <template>
-  <div class="container">
-    <NavAdmin />
-    <div class="content">
-      <div class="actions">
-        <div class="active">
-          <BoxIcon />
-          <p class="copy-m bold">
-            {{ route }}
-          </p>
-        </div>
-        <div class="user">
-          <SDropdown>
-            <template #toggler>
-              <div class="toggle">
-                <img :src="loggedInUser.img" alt="">
-                <p class="copy-m bold">
-                  {{ loggedInUser.name }}
-                </p>
-                <ChevronDownIcon />
-              </div>
-            </template>
-            <SDropdownContent>
-              <NuxtLink to="/admin/profile/" class="link">
-                <UserIcon />
-                <div class="copy-m">
-                  Upraviť profil
+  <div>
+    <LoadingScreen v-show="showHideSpinner" />
+    <div class="container">
+      <NavAdmin />
+      <div class="content">
+        <div class="actions">
+          <div class="active">
+            <BoxIcon />
+            <p class="copy-m bold">
+              {{ route }}
+            </p>
+          </div>
+          <div class="user">
+            <SDropdown>
+              <template #toggler>
+                <div class="toggle">
+                  <img :src="loggedInUser.img" alt="">
+                  <p class="copy-m bold">
+                    {{ loggedInUser.name }}
+                  </p>
+                  <ChevronDownIcon />
                 </div>
-              </NuxtLink>
-              <div class="link" @click="logout()">
-                <LogOutIcon />
-                <div class="copy-m">
-                  Odhlásiť sa
+              </template>
+              <SDropdownContent>
+                <NuxtLink to="/admin/profile/" class="link">
+                  <UserIcon />
+                  <div class="copy-m">
+                    Upraviť profil
+                  </div>
+                </NuxtLink>
+                <div class="link" @click="logout()">
+                  <LogOutIcon />
+                  <div class="copy-m">
+                    Odhlásiť sa
+                  </div>
                 </div>
-              </div>
-            </SDropdownContent>
-          </SDropdown>
+              </SDropdownContent>
+            </SDropdown>
+          </div>
         </div>
+        <Nuxt />
       </div>
-      <Nuxt />
     </div>
   </div>
 </template>
@@ -70,9 +73,22 @@ export default Vue.extend({
       return undefined
     }
   },
+  beforeCreate () {
+    this.showHideSpinner = true
+  },
+  mounted () {
+    setTimeout(() => {
+      this.showHideSpinner = false
+    }, 350)
+  },
   methods: {
     async logout () {
       await this.$auth.logout()
+    }
+  },
+  data () {
+    return {
+      showHideSpinner: true
     }
   }
 })
