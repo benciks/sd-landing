@@ -101,7 +101,7 @@ export default Vue.extend({
         if (this.tempImg) {
           article.img = this.tempImg
         } else if (this.article.img) {
-          return
+          article.img = this.article.img
         } else {
           article.img = ''
         }
@@ -124,7 +124,7 @@ export default Vue.extend({
         if (this.tempImg) {
           article.img = this.tempImg
         } else if (this.article.img) {
-          return
+          article.img = this.article.img
         } else {
           article.img = ''
         }

@@ -3,7 +3,7 @@
     <div class="form">
       <Logo class="logo" />
       <SInput v-model="email" type="email" placeholder="Email" :model-value="email" :validation="validationMsg($v.email)" />
-      <SInput v-model="password" type="password" placeholder="Heslo" :model-value="name" :validation="validationMsg($v.password)" />
+      <SInput v-model="password" type="password" placeholder="Heslo" :model-value="password" :validation="validationMsg($v.password)" />
       <p v-if="failed" class="error">
         Email alebo heslo je nesprávne
       </p>

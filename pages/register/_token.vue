@@ -13,14 +13,13 @@
 
 <script>
 import Vue from 'vue'
-import { required, minLength, email, alpha, sameAs } from 'vuelidate/lib/validators'
+import { required, minLength, email, sameAs } from 'vuelidate/lib/validators'
 import { validationMessage } from 'vuelidate-messages'
 
 const formMessages = {
   required: () => 'Toto pole je povinné',
   minLength: ({ $params }) => `Heslo musí byť dlhé aspoň ${$params.minLength.min} znakov.`,
   email: () => 'Zadajte email v správnom formáte',
-  alpha: () => 'Meno môže obsahovať len znaky abecedy.',
   sameAsPassword: () => 'Heslá by sa mali zhodovať'
 }
 
@@ -35,7 +34,7 @@ export default Vue.extend({
     }
   },
   validations: {
-    name: { required, alpha },
+    name: { required },
     email: { required, email },
     password: { required, minLength: minLength(8) },
     repeatPassword: {
