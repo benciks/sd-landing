@@ -98,9 +98,14 @@ export default Vue.extend({
 
       if (!this.$v.$invalid) {
         const article = this.composeArticle('unpublished')
-        if (this.tempImg) { article.img = this.tempImg } else {
+        if (this.tempImg) {
+          article.img = this.tempImg
+        } else if (article.img) {
+          article.img = this.article.img
+        } else {
           article.img = ''
         }
+
         if (!article.content) { article.content = '' }
 
         if (this.$route.params.url !== 'create') {
@@ -116,9 +121,14 @@ export default Vue.extend({
 
       if (!this.$v.$invalid) {
         const article = this.composeArticle('published')
-        if (this.tempImg) { article.img = this.tempImg } else {
+        if (this.tempImg) {
+          article.img = this.tempImg
+        } else if (this.article.img) {
+          article.img = this.article.img
+        } else {
           article.img = ''
         }
+
         if (!article.content) { article.content = '' }
 
         if (this.$route.params.url !== 'create') {

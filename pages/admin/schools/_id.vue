@@ -115,7 +115,11 @@ export default Vue.extend({
       if (!this.$v.$invalid) {
         const school = this.composeSchool('unpublished')
 
-        if (this.tempImg) { school.img = this.tempImg } else {
+        if (this.tempImg) {
+          school.img = this.tempImg
+        } else if (this.school.img) {
+          school.img = this.school.img
+        } else {
           school.img = ''
         }
 
@@ -132,7 +136,11 @@ export default Vue.extend({
 
       if (!this.$v.$invalid) {
         const school = this.composeSchool('published')
-        if (this.tempImg) { school.img = this.tempImg } else {
+        if (this.tempImg) {
+          school.img = this.tempImg
+        } else if (this.school.img) {
+          school.img = this.school.img
+        } else {
           school.img = ''
         }
 
