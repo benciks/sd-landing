@@ -37,8 +37,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/vue-clickaway', ssr: false },
-    '~/plugins/vuelidate.js',
-    { src: '~/plugins/vuex-persist', ssr: false }
+    '~/plugins/vuelidate.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -58,8 +57,8 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
-    '@nuxtjs/auth'
+    { src: '@nuxtjs/axios', mode: 'client' },
+    { src: '@nuxtjs/auth', mode: 'client' }
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

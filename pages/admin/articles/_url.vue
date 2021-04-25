@@ -100,8 +100,8 @@ export default Vue.extend({
         const article = this.composeArticle('unpublished')
         if (this.tempImg) {
           article.img = this.tempImg
-        } else if (article.img) {
-          article.img = this.article.img
+        } else if (this.article.img) {
+          return
         } else {
           article.img = ''
         }
@@ -124,7 +124,7 @@ export default Vue.extend({
         if (this.tempImg) {
           article.img = this.tempImg
         } else if (this.article.img) {
-          article.img = this.article.img
+          return
         } else {
           article.img = ''
         }

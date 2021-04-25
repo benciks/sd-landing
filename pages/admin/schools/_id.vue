@@ -118,7 +118,7 @@ export default Vue.extend({
         if (this.tempImg) {
           school.img = this.tempImg
         } else if (this.school.img) {
-          school.img = this.school.img
+          return
         } else {
           school.img = ''
         }
@@ -139,7 +139,7 @@ export default Vue.extend({
         if (this.tempImg) {
           school.img = this.tempImg
         } else if (this.school.img) {
-          school.img = this.school.img
+          return
         } else {
           school.img = ''
         }
