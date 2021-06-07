@@ -8,8 +8,8 @@
       <p class="copy-l">
         {{ post.description }}
       </p>
-      <NuxtLink to="/articles/zameranie-odborov">
-        <SButton value="Zobraziť odbory" type="textMore" />
+      <NuxtLink to="/articles/dualne-vzdelavanie">
+        <SButton value="Zobraziť viac" type="textMore" />
       </NuxtLink>
     </div>
   </section>
@@ -22,7 +22,7 @@ export default Vue.extend({
   data () {
     return {
       post: {
-        title: 'Poštové služby',
+        title: 'Duálne vzdelávanie',
         description: 'Saw them. Moveth abundantly don\'t sea us i greater. Don\'t one cattle their i tree is fruitful whales morting abundantly to Our.'
       }
     }
